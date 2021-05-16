@@ -26,5 +26,4 @@ class CompaniesSpider(scrapy.Spider):
             company['company'] = colEles[1].extract()
             company['loc'] = colEles[2].extract()
 
-            print(company)
-        pass
+            yield company
