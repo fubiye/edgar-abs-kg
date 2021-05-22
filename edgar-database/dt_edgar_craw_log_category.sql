@@ -1,0 +1,1 @@
+insert into edgar_craw_log_category(id, name, description) values(1,"filings","The filing of the company in specific time");
