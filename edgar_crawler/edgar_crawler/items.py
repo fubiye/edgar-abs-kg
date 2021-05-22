@@ -17,3 +17,17 @@ class CompanyItem(scrapy.Item):
     cik = scrapy.Field()
     company = scrapy.Field()
     loc = scrapy.Field()
+
+class CompanyFilingItem(scrapy.Item):
+    cik = scrapy.Field()
+    filing = scrapy.Field()
+    docs_link = scrapy.Field()
+    filing_desc = scrapy.Field()
+    effective = scrapy.Field()
+    file_num = scrapy.Field()
+    file_num_raw = scrapy.Field()
+class CompanyFilingStateItem(scrapy.Item):
+    cik = scrapy.Field()
+    category = scrapy.Field()
+    state = scrapy.Field()
+    

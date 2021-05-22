@@ -10,3 +10,4 @@ create table edgar_company_filing(
     update_ts timestamp default CURRENT_TIMESTAMP,
     index(cik)
 );
+alter table edgar_company_filing add primary key filing_pk (cik, docs_link);
