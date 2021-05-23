@@ -3,12 +3,22 @@ import scrapy
 from edgar_crawler.constants import SEC_HOSTNAME, GET_COMPANY_FILING_TEMP
 from edgar_crawler.items import CompanyFilingItem, CompanyFilingStateItem
 from edgar_crawler.utils import get_query_value
+from edgar_crawler.database import Database
+
 class CompanyFilingSpider(scrapy.Spider):
     name = "filings"
 
+    def __init__(self):
+        self.db = Database()
+        self.conn = self.db.getConn()
+        self.cursor = self.conn.cursor()
+
     def start_requests(self):
-        url = SEC_HOSTNAME + GET_COMPANY_FILING_TEMP.format("0000020164", "0")
-        yield scrapy.Request(url = url, callback=self.parse)
+        self.cursor.execute("select distinct cik from edgar_company where cik not in (select distinct cik from edgar_company_filing_craw_log where state = 'done')")
+        ciksRs = self.cursor.fetchall()
+        for cikRs in ciksRs:
+            url = SEC_HOSTNAME + GET_COMPANY_FILING_TEMP.format(cikRs['cik'], "0")
+            yield scrapy.Request(url = url, callback=self.parse)
 
     def parse(self, response):
         url = response.request.url
