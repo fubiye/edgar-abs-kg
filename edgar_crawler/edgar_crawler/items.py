@@ -30,4 +30,10 @@ class CompanyFilingStateItem(scrapy.Item):
     cik = scrapy.Field()
     category = scrapy.Field()
     state = scrapy.Field()
-    
+class FileDownloadRecordItem(scrapy.Item):
+    path = scrapy.Field()
+    state = scrapy.Field()
+
+class FileDownloadItem(scrapy.Item):
+    file_urls = scrapy.Field()
+    files = scrapy.Field()

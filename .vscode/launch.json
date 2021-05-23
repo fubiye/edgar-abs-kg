@@ -14,8 +14,9 @@
             "cwd": "${workspaceFolder}/edgar_crawler",
             "args": [
                 "crawl",
-                "filings"
-            ]
+                "filings-file"
+            ],
+            "justMyCode": false
         }
     ]
 }

@@ -52,9 +52,9 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 16
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+# DOWNLOADER_MIDDLEWARES = {
 #    'edgar_crawler.middlewares.EdgarCrawlerDownloaderMiddleware': 543,
-#}
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -65,9 +65,11 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'edgar_crawler.pipelines.EdgarCrawlerPipeline': 300,
+   # 'scrapy.pipelines.files.FilesPipeline': 1,
+   'edgar_crawler.pipelines.MyFilesPipeline': 1,
+   'edgar_crawler.pipelines.EdgarCrawlerPipeline': 300
 }
-
+FILES_STORE = 'F:\dataset\edgar'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

@@ -6,8 +6,14 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-from edgar_crawler.items import CompanyItem, CompanyFilingItem,CompanyFilingStateItem
+import os
+from scrapy.http.request import Request
+from scrapy.pipelines.files import FilesPipeline
+from urllib.parse import urlparse
+
+from edgar_crawler.items import CompanyItem, CompanyFilingItem,CompanyFilingStateItem,FileDownloadRecordItem
 from edgar_crawler.database import Database
+from edgar_crawler.constants import SEC_HOSTNAME
 
 
 class EdgarCrawlerPipeline(object):
@@ -28,4 +34,28 @@ class EdgarCrawlerPipeline(object):
             sql = "insert into edgar_company_filing_craw_log set cik = %s, category = %s, state = %s"
             self.cursor.execute(sql,(item['cik'],item['category'],item['state']))
             self.conn.commit()
+        if isinstance(item, FileDownloadRecordItem):
+            sql = "insert into edgar_file_log set file_path = %s, state = %s"
+            self.cursor.execute(sql,(item['path'],item['state']))
+            self.conn.commit()
         return item
+
+class MyFilesPipeline(FilesPipeline):
+    def __init__(self, store_uri, download_func=None, settings=None):
+        super().__init__(store_uri, download_func=download_func, settings=settings)
+        self.db = Database()
+        self.conn = self.db.getConn()
+        self.cursor = self.conn.cursor()
+    def file_path(self, request, response=None, info=None):
+        return urlparse(request.url).path
+    def media_to_download(self, request, info):
+        dfd = super().media_to_download(request, info)
+        def _onsuccess(result):
+            if not result:
+                return  # returning None force download
+            path = urlparse(request.url).path
+            sql = "insert into edgar_file_log set file_path = %s, state = %s"
+            self.cursor.execute(sql,(path,'done'))
+            self.conn.commit()
+        dfd.addCallbacks(_onsuccess, lambda _: None)
+        return dfd
