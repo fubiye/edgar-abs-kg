@@ -11,3 +11,6 @@ create table edgar_company_filing(
     index(cik)
 );
 alter table edgar_company_filing add primary key filing_pk (cik, docs_link);
+alter table edgar_company_filing add id int NOT NULL AUTO_INCREMENT primary key;
+# alter table edgar_company_filing change id id int NOT NULL AUTO_INCREMENT primary key;
+alter table edgar_company_filing modify id int first;
