@@ -11,7 +11,7 @@ from scrapy.http.request import Request
 from scrapy.pipelines.files import FilesPipeline
 from urllib.parse import urlparse
 
-from edgar_crawler.items import CompanyItem, CompanyFilingItem,CompanyFilingStateItem,FileDownloadRecordItem
+from edgar_crawler.items import CompanyItem, CompanyFilingItem,CompanyFilingStateItem,FileDownloadRecordItem, FilingFileItem
 from edgar_crawler.database import Database
 from edgar_crawler.constants import SEC_HOSTNAME
 
@@ -37,6 +37,10 @@ class EdgarCrawlerPipeline(object):
         if isinstance(item, FileDownloadRecordItem):
             sql = "insert into edgar_file_log set file_path = %s, state = %s"
             self.cursor.execute(sql,(item['path'],item['state']))
+            self.conn.commit()
+        if isinstance(item, FilingFileItem):
+            sql = "insert ignore edgar_filing_file set filing_path = %s, seq = %s, description = %s, doc_name = %s, doc_link = %s, doc_type = %s, size = %s"
+            self.cursor.execute(sql,(item['filing_path'],item['seq'],item['description'],item['doc_name'],item['doc_link'],item['doc_type'],item['size']))
             self.conn.commit()
         return item
 
