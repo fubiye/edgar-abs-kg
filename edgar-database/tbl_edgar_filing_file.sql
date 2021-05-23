@@ -1,7 +1,7 @@
 create table edgar_filing_file(
     id int NOT NULL AUTO_INCREMENT primary key,
-    filing_path varchar(150),
-    seq varchar(3),
+    filing_id int,
+    seq int,
     description varchar(200),
     doc_name varchar(100),
     doc_link varchar(200),
@@ -10,4 +10,4 @@ create table edgar_filing_file(
     update_ts timestamp default CURRENT_TIMESTAMP
 );
 
-ALTER TABLE edgar_filing_file ADD UNIQUE INDEX `idx_path_seq` (`filing_path`,`seq`);
+ALTER TABLE edgar_filing_file ADD UNIQUE INDEX `idx_filing_id_seq` (`filing_id`,`seq`);

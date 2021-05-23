@@ -1,5 +1,6 @@
 
 import scrapy
+from scrapy.http import request
 from edgar_crawler.constants import SEC_HOSTNAME, GET_COMPANY_FILING_TEMP
 from edgar_crawler.items import FileDownloadItem, FileDownloadRecordItem, FilingFileItem
 # from edgar_crawler.utils import get_query_value
@@ -16,10 +17,13 @@ class CompanyFilingSpider(scrapy.Spider):
         # for cikRs in ciksRs:
         #     url = SEC_HOSTNAME + GET_COMPANY_FILING_TEMP.format(cikRs['cik'], "0")
         url = SEC_HOSTNAME + '/Archives/edgar/data/762153/000153949712000382/0001539497-12-000382-index.htm'
-        yield scrapy.Request(url = url, callback=self.parse)
+        request = scrapy.Request(url = url, callback=self.parse)
+        request.meta['filingID'] = 4315
+        yield request
     def parse(self, response):
         url = response.request.url
-        path = url[len(SEC_HOSTNAME):-1]
+        filingID = response.request.meta['filingID']
+        path = url[len(SEC_HOSTNAME):]
         file = FileDownloadItem()
         file['file_urls'] = [
             url
@@ -35,11 +39,11 @@ class CompanyFilingSpider(scrapy.Spider):
             if len(colEles) < 5:
                 continue
             file = FilingFileItem()
-            file['filing_path'] = path
+            file['filing_id'] = filingID
             file['seq'] = colEles[0].xpath('.//text()').extract_first()
             file['description'] = colEles[1].xpath(".//text()").extract_first()
             file['doc_name'] = colEles[2].xpath(".//text()").extract_first()
-            file['doc_link'] = colEles[2].xpath("./a/text()").extract_first()
+            file['doc_link'] = colEles[2].xpath("./a/@href").extract_first()
             file['doc_type'] = colEles[3].xpath(".//text()").extract_first()
             file['size'] = colEles[4].xpath(".//text()").extract_first()
             yield file

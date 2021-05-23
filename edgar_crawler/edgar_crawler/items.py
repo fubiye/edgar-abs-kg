@@ -39,7 +39,7 @@ class FileDownloadItem(scrapy.Item):
     files = scrapy.Field()
 
 class FilingFileItem(scrapy.Item):
-    filing_path = scrapy.Field()
+    filing_id = scrapy.Field()
     seq = scrapy.Field()
     description = scrapy.Field()
     doc_name = scrapy.Field()

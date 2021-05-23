@@ -39,8 +39,8 @@ class EdgarCrawlerPipeline(object):
             self.cursor.execute(sql,(item['path'],item['state']))
             self.conn.commit()
         if isinstance(item, FilingFileItem):
-            sql = "insert ignore edgar_filing_file set filing_path = %s, seq = %s, description = %s, doc_name = %s, doc_link = %s, doc_type = %s, size = %s"
-            self.cursor.execute(sql,(item['filing_path'],item['seq'],item['description'],item['doc_name'],item['doc_link'],item['doc_type'],item['size']))
+            sql = "insert ignore edgar_filing_file set filing_id = %s, seq = %s, description = %s, doc_name = %s, doc_link = %s, doc_type = %s, size = %s"
+            self.cursor.execute(sql,(item['filing_id'],item['seq'],item['description'],item['doc_name'],item['doc_link'],item['doc_type'],item['size']))
             self.conn.commit()
         return item
 
