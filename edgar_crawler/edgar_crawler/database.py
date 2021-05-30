@@ -6,8 +6,6 @@ class Database():
     config = {
             'host': '127.0.0.1',
             'port': 3306,
-            'user': 'root',
-            'password': 'abc123',
             'db': 'edgar',
             'charset': 'utf8mb4',
             'cursorclass': pymysql.cursors.DictCursor,

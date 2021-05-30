@@ -34,7 +34,6 @@ class CompanyFilingSpider(scrapy.Spider):
                     max_id = filingID
                 request.meta['filingID'] = filingID
                 yield request
-            sleep(10)
     def parse(self, response):
         url = response.request.url
         filingID = response.request.meta['filingID']
