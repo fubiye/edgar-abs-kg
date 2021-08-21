@@ -36,11 +36,11 @@ def parse_lines_in_file(filename):
     return lines
 
 def get_all_downloaded_files():
-    downloaded_files.update(parse_lines_in_file(r'd.txt'))
-    downloaded_files.update(parse_lines_in_file(r'D:\data\edgar\downloaded.txt'))
-    downloaded_files.update(parse_lines_in_file(r'D:\data\edgar\files.txt'))
+    # downloaded_files.update(parse_lines_in_file(r'd.txt'))
+    # downloaded_files.update(parse_lines_in_file(r'D:\data\edgar\downloaded.txt'))
+    downloaded_files.update(parse_lines_in_file(r'D:\data\edgar\files.bak'))
 def get_total_files():
-    total_files.update(parse_lines_in_file(r'D:\data\edgar\files.bak'))
+    total_files.update(parse_lines_in_file(r'D:\workspace\edgar-abs-kg\edgar_crawler\crawler-utils\invalid.txt'))
 
 def get_to_be_downloaded_files():
     logging.info("Total files count: {}".format(len(total_files)))

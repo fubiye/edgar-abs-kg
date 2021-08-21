@@ -52,15 +52,7 @@ class MyFilesPipeline(FilesPipeline):
         self.cursor = self.conn.cursor()
     def file_path(self, request, response=None, info=None):
         return urlparse(request.url).path
-    # def media_to_download(self, request, info):
-    #     dfd = super().media_to_download(request, info)
-    #     def _doonsuccess(result):
-    #         path = urlparse(request.url).path
-    #         sql = "insert into edgar_file_log set file_path = %s, state = %s"
-    #         self.cursor.execute(sql,(path,'done'))
-    #         self.conn.commit()
-    #     dfd.addCallbacks(_doonsuccess, lambda _: None)
-    #     return dfd
+        
     def item_completed(self, results, item, info):
         item = super().item_completed(results, item, info)
         if 'files' in item and len(item['files']) > 0:
