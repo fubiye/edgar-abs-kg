@@ -24,6 +24,8 @@ DOWNLOADED_FILES_SRC = r'd:\workspace\edgar-abs-kg\sampling\downloaded.txt'
 
 SEC_HOST = 'https://sec.gov'
 
+# 
+
 candidate_files = set()
 downloaded_files = set()
 pending_download = set()

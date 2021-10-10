@@ -53,10 +53,13 @@ if __name__ == '__main__':
     s3_files = get_files_in_s3()
     print(s3_files)
     total = len(s3_files)
+    count = 0
     for index,file in enumerate(s3_files):
         if file in local_files:
-            logging.info("File already exist: {}".format(file))
+            # logging.info("File already exist: {}".format(file))
+            print("touch {}".format(file))
             continue
-        logging.info("[{}/{}] - {}".format(index, total, file))
-        download_file(file)
+        # logging.info("[{}/{}] - {}".format(count, total, file))
+        count = count + 1
+        # download_file(file)
     
