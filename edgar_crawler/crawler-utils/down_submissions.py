@@ -5,22 +5,17 @@ import time
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.INFO)
-# TARGET_FOLDER = r'D:\data\edgar\enrich'
-# CANDIDATE_FILES_SRC = r'd:\data\edgar\files.txt'
-# DOWNLOADED_FILES_SRC = r'd:\data\edgar\downloaded.txt'
 
-TARGET_FOLDER = r'D:\data\edgar\sampling'
-CANDIDATE_FILES_SRC = r'd:\workspace\edgar-abs-kg\sampling\unavailable.txt'
-DOWNLOADED_FILES_SRC = r'd:\workspace\edgar-abs-kg\sampling\downloaded.txt'
-
-SEC_HOST = 'https://sec.gov'
+TARGET_FOLDER = r'D:\data\edgar\sampling\submissions'
+CANDIDATE_FILES_SRC = r'd:\workspace\edgar-abs-kg\dataset\mbs-index.txt'
+DOWNLOADED_FILES_SRC = r'd:\workspace\edgar-abs-kg\dataset\mbs-index-downloaded.txt'
 
 candidate_files = set()
 downloaded_files = set()
 pending_download = set()
 
-http = urllib3.PoolManager(timeout= 60)
-
+http = urllib3.PoolManager(timeout= 90)
+SEC_HOST = 'https://sec.gov'
 def parse_lines_in_file(filename):
     logging.info("parsing file: {}".format(filename))
     file = open(filename, 'r')
@@ -48,40 +43,30 @@ def calc_pending_download_file():
     pending_download.update(candidate_files.difference(downloaded_files))
     logging.info("Totoal num of pending download files: {}".format(len(pending_download)))
 
-def ensure_exists(filename):
-    file_path = os.path.join(TARGET_FOLDER,filename[1:])
-    parent_folder = os.path.dirname(file_path)
-    logging.info("ensure folder exists: {}".format(parent_folder))
-    if not os.path.exists(parent_folder):
-        logging.info('parent folder not exists: {}'.format(parent_folder))
-        os.makedirs(parent_folder)
-        logging.info('folder created: {}'.format(parent_folder))
-
 def do_download_file(filename):
-    url = SEC_HOST + filename
+    url = filename
     logging.info("Downloading: {}".format(url))
 
     headers = {
         'User-Agent':'edgar@yahoo.com',
         'Accept-Encoding': 'gzip, deflate',
         'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-        'Host': 'www.sec.gov'
+        'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"'
     }
     response = http.request('GET',url, headers=headers)
-    with open(os.path.join(TARGET_FOLDER, filename[1:]),'w') as file:
+    
+    with open(os.path.join(TARGET_FOLDER, filename.split('/')[-1]),'w') as file:
         file.write(response.data.decode('utf-8'))
 def record_downloaded_file(filename):
     with open(DOWNLOADED_FILES_SRC,'a') as downloaded_file:
         downloaded_file.write(filename+'\n')
 def download_file(filename, pending_cnt, current_idx):
     logging.info('[{}/{}]Start download file: {}'.format(current_idx, pending_cnt, filename))
-    try:
-        ensure_exists(filename)
-        do_download_file(filename)
-        record_downloaded_file(filename)
-    except err:
-        pass
+    # try:
+    do_download_file(filename)
+    record_downloaded_file(filename)
+    # except err:
+    #     pass
 
 def download_files():
     pending_cnt = len(pending_download)
@@ -91,7 +76,7 @@ def download_files():
             download_file(pending_file,pending_cnt, current_idx)
             time.sleep(0.1)
         except Exception as err:
-            logging.error("Faile to download: {}".format(pending_file), str(err))
+            logging.error("Faile to download: {}".format(pending_file),str(err))
         current_idx = current_idx + 1 
 
 if __name__ == '__main__':

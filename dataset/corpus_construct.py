@@ -4,6 +4,7 @@ import logging
 from bs4 import BeautifulSoup
 import multiprocessing as mp
 
+# Parsing HTML files under $DATA_PATH to csv file
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.INFO)

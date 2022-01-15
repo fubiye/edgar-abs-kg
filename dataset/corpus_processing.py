@@ -1,5 +1,7 @@
 import pandas as pd
 import re
+# corpus content processing
+
 CORPUS = r'D:\data\edgar\example\corpus.csv'
 
 NOT_OPENNING_TAGS = set(['(',')','”',',','®'])

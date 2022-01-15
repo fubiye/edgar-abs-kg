@@ -46,6 +46,7 @@ def extract_files(zipGrp):
     filesDf = zipGrp[1]
     filesDf['file_name'].apply(lambda filename: extract_file(archive, filename))
 if __name__ == '__main__':
+    filter_valid_files()
     parsed_records = set(parse_lines_in_file('record.txt'))
     parsed_records = parsed_records.union(set(parse_lines_in_file('failed.txt')))
     
